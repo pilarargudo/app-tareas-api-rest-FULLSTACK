@@ -18,29 +18,46 @@ app.use( function ( req, res, next ) {
 } );
 
 
-app.get( '/users', ( req, res ) => {
+app.get( '/tasks', ( req, res ) => {
 
      const stringJson = fs.readFileSync( './bd.json', 'UTF-8' );
 
      const data = JSON.parse( stringJson );
-     res.status( 200 ).json( data );
+     res.status( 200 ).json( data.tasks );
 
 } );
 
-app.post( '/users', ( req, res ) => {
-    console.log('body' ,req.body );
+app.post( '/tasks', ( req, res ) => {
+    if ( req.body.text ) {
+        try {
+            let task = {
+                text: req.body.text,
+                completed: false,
+                id: Date.now(),
+                color: null
+            }
+            // get a parse file
+            const stringJson = fs.readFileSync( './bd.json', 'UTF-8' );
 
-    const stringJson = fs.readFileSync( './bd.json', 'UTF-8' );
+            const data = JSON.parse( stringJson );
+            // add tasks
+            data.tasks.push( task );
 
-    const data = JSON.parse( stringJson );
+            //save to file
+            const newDataString = JSON.stringify( data );
+            fs.writeFileSync( './bd.json', newDataString );
 
-    data.users.push( req.body );
+            // response to front
+            res.json( { code: 200 } );
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({message:'something went wrong. my fault. sorry'})
 
-    const newDataString = JSON.stringify( data );
+        }
+    } else {
+        res.status(400).json({message:'NO TEXT? REALLY? THINK TWICE'})
+    }
 
-    fs.writeFileSync( './bd.json', newDataString );
-
-    res.json( { code: 200 } );
 } );
 
 app.listen( port, () => console.log( 'Servidor levantado en ' + port ) );

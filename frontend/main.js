@@ -1,4 +1,19 @@
 document.addEventListener( 'DOMContentLoaded', function () {
+    const baseApiUrl = 'http://localhost:3000';
+    const getTaskFromAPIRest = () => {
+
+        fetch( baseApiUrl  + '/tasks' )
+            .then( console.log )
+            .catch(console.error)
+
+
+    }
+
+    getTaskFromAPIRest();
+
+
+
+
 
     let createTemplateHtmlString = text =>
         `<div class="task">
@@ -22,6 +37,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
             node.classList.toggle('completed')
         })
     }
+
+
+    // add tasks
     let inputNode = document.querySelector( 'header input' );
 
     inputNode.addEventListener( 'keyup', function ( event ) {
