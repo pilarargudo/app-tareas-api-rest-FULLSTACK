@@ -6,6 +6,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
     const baseApiUrl = 'http://localhost:3000';
     const getTaskFromAPIRest = () => {
 
+        // GET to /tasks
         fetch( baseApiUrl + '/tasks' )
             .then( response => response.json() )
             .then( tasks => {
@@ -20,10 +21,10 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
         tasksArray.forEach( task => {
 
-            const taskNode = createTaskNode(task);
+            const taskNode = createTaskNode( task );
             tasksSection.appendChild( taskNode );
 
-        })
+        } )
     }
 
     const createTaskNode = taskObj => {
@@ -44,7 +45,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
     }
 
-    let createTemplateHtmlString = ({text, color, id, completed}) =>
+    let createTemplateHtmlString = ( { text, color, id, completed } ) =>
         `<div class="task ${completed ? 'completed': ''}" data-id="${id}" style="border-color: ${color}">
             <div class="text">${text}</div>
             <button class="remove">remove</button>
@@ -67,33 +68,53 @@ document.addEventListener( 'DOMContentLoaded', function () {
         } )
     }
 
+    let saveTaskToBackend = text => {
+        // GET to /tasks
+        return fetch( baseApiUrl + '/tasks', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify( { text } )
+            } )
+            .then( console.log )
+            .then( response => response.json() )
+            .then( console.log )
+
+            .catch( console.error )
+    }
     // // add tasks
-    // let inputNode = document.querySelector( 'header input' );
+    let inputNode = document.querySelector( 'header input' );
 
-    // inputNode.addEventListener( 'keyup', function ( event ) {
-    //     if ( event.keyCode === 13 ) {
-    //         //get value from input
-    //         let newTaskText = event.target.value;
-    //         // console.log(newTaskText);
+    inputNode.addEventListener( 'keyup', function ( event ) {
+        if ( event.keyCode === 13 ) {
+            //get value from input
+            let newTaskText = event.target.value;
 
-    //         // creat html string from value text
-    //         let newTaskHtmlString = createTemplateHtmlString( newTaskText )
-    //         // console.log(newTaskHtmlString);
 
-    //         // node creation from html string
-    //         let newTaskNode = createNodeFromString( newTaskHtmlString )
-    //         // console.log(newTaskNode)
+            saveTaskToBackend( newTaskText ).then( () => {
+                 // creat html string from value text
+                 let newTaskHtmlString = createTemplateHtmlString( { text: newTaskText } )
+                 // console.log(newTaskHtmlString);
 
-    //         // node inject to DOM in main
-    //         document.querySelector( 'main' ).appendChild( newTaskNode )
+                 // node creation from html string
+                 let newTaskNode = createNodeFromString( newTaskHtmlString )
+                 // console.log(newTaskNode)
 
-    //         // clean value
-    //         event.target.value = '';
+                 // node inject to DOM in main
+                 document.querySelector( 'main' ).appendChild( newTaskNode )
 
-    //         addRemoveListener( newTaskNode );
-    //         addCompleteListener( newTaskNode );
-    //     }
-    // } )
+                 // clean value
+                 event.target.value = '';
+
+                 addRemoveListener( newTaskNode );
+                 addCompleteListener( newTaskNode );
+            })
+
+
+        }
+    } )
 
     // Encender la falla
     ////////////////////
