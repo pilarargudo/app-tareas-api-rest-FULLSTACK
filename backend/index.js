@@ -5,15 +5,18 @@ const fs = require( 'fs' );
 
 const port = Number( process.argv[ 2 ] ) || 3000;
 
-const bodyParser = require( 'body-parser' );
 
-app.use( bodyParser() );
-
-
-// app.get('/hola/:miParametro', (req,res) => res.json(req.params) )
+// BODY PARSE TO JSON
+app.use( express.json() );
 
 
-app.get('/', (req,res) => res.sendFile(__dirname + '/index.html'));
+// enable CORS
+app.use( function ( req, res, next ) {
+    res.header( "Access-Control-Allow-Origin", "*" );
+    res.header( "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept" );
+    next();
+} );
+
 
 app.get( '/users', ( req, res ) => {
 
