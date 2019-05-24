@@ -19,6 +19,7 @@ Ejercicio práctico para conectar un API rest y un frontend
 - [x] Delete task from DOM
 - [ ] DELETE /tasks/:id
 - [x] complete task in DOM
+- [ ] complete task from DOM to DB
 - [ ] PUT /tasks/:id
 - [ ] edit color in front and save to back
 - [ ] edit task text in front and save to back
